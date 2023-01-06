@@ -5,8 +5,6 @@ import { ImageGallery } from "./ImageGallery/ImageGallery";
 import { Searchbar } from './Searchbar/Searchbar';
 import ImageLoader from "./Loader/Loader";
 
-
-
 export class App extends Component {
   
   state = {

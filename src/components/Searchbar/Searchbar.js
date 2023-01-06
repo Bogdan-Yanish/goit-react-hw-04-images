@@ -1,6 +1,7 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
-import { SearchWrap, SearchForm, SearchBtn, SearchBtnLabel, SearchInput} from "./Searchbar.styled";
+import { FcSearch } from 'react-icons/fc';
+import { SearchWrap, SearchForm, SearchBtn, SearchInput} from "./Searchbar.styled";
 
 export class Searchbar extends Component {
 
@@ -27,7 +28,7 @@ export class Searchbar extends Component {
             <SearchWrap>
                 <SearchForm onSubmit={this.handleSubmit}>
                     <SearchBtn type="submit" >
-                        <SearchBtnLabel className="button-label">Search</SearchBtnLabel>
+                        <FcSearch></FcSearch>
                     </SearchBtn>
 
                 <SearchInput
