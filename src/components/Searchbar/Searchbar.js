@@ -1,6 +1,7 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import { FcSearch } from 'react-icons/fc';
+import toast, { Toaster } from 'react-hot-toast';
 import { SearchWrap, SearchForm, SearchBtn, SearchInput} from "./Searchbar.styled";
 
 export class Searchbar extends Component {
@@ -18,6 +19,20 @@ export class Searchbar extends Component {
         event.preventDefault();
         const { onSubmit } = this.props;
         const { query } = this.state;
+        
+        if (query.trim() === '') {
+            toast.error('Please, enter something in a search query', {
+              duration: 3000,
+              style: {
+                border: '1px solid transparent',
+                padding: '16px',
+                color: 'red',
+                width: '300px',
+              },
+            });
+            return;
+          }
+
         onSubmit(query);
         
     };
@@ -41,6 +56,7 @@ export class Searchbar extends Component {
                     value={query}
                 />
                 </SearchForm>
+                <Toaster position="top-right"/>
             </SearchWrap>
         )
     }

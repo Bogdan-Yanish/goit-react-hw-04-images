@@ -1,17 +1,11 @@
 import { createPortal } from 'react-dom';
 import { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { Overlay, Modal } from './Modal.styled';
 
 const modalRoot = document.querySelector('#modal-root');
 
 export class ImageModal extends Component {
-
-    // static propTypes = {
-    //     largeImageURL:PropTypes.string,
-    //     tags:PropTypes.string,
-    //     onCloseModal: PropTypes.func.isRequired,
-    // };
 
     componentDidMount() {
         window.addEventListener('keydown', this.handleClose);
@@ -45,3 +39,11 @@ export class ImageModal extends Component {
       );
     }
   }
+
+  ImageModal.propTypes = {
+    image: PropTypes.shape({
+      largeImageURL: PropTypes.string.isRequired,
+      tags: PropTypes.string.isRequired,
+    }),
+    onCloseModal: PropTypes.func.isRequired,
+  };

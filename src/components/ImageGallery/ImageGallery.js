@@ -1,5 +1,5 @@
 import { GalleryList } from "./ImageGallery.styled";
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { ImageGalleryItem } from "../ImageGalleryItem/ImageGalleryItem";
 
 export const ImageGallery = ({ images }) => {
@@ -30,16 +30,15 @@ export const ImageGallery = ({ images }) => {
 //     )
 // }
 
-// ImageGallery.propTypes = {
-//     images: PropTypes.arrayOf(
-//         PropTypes.shape({
-//             id: PropTypes.number.isRequired,
-//             webformatURL: PropTypes.string.isRequired,
-//             largeImageURL: PropTypes.string.isRequired,
-//             tags:PropTypes.string.isRequired,
-//       })
-//     ),
-   
-//   };
+ImageGallery.propTypes = {
+    images: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.number.isRequired,
+            webformatURL: PropTypes.string.isRequired,
+            largeImageURL: PropTypes.string.isRequired,
+            tags:PropTypes.string.isRequired,
+        })
+    ),
+};
     
 
