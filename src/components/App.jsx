@@ -77,7 +77,7 @@ export class App extends Component {
       
       {isLoading && (<ImageLoader/>)}
 
-      <Toaster position="top-right" />
+      <Toaster position="top-center" />
       </>
     );
   }
