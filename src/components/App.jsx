@@ -85,7 +85,7 @@ export const App = () => {
       <Searchbar onSubmit = {handleSubmitSearch} />
       {images.length > 0 && (<ImageGallery images={images}/>)}
 
-      {images.length >= pagelimit && loadMore && (<Button onLoadMore = {handleLoadMore}/>)}
+      {(images.length >= pagelimit && loadMore && !isLoading) && (<Button onLoadMore = {handleLoadMore}/>)}
       
       {isLoading && (<ImageLoader/>)}
 
