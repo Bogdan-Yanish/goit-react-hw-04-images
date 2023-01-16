@@ -1,47 +1,44 @@
-import { Component } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import { FcSearch } from 'react-icons/fc';
 import toast, { Toaster } from 'react-hot-toast';
 import { SearchWrap, SearchForm, SearchBtn, SearchInput} from "./Searchbar.styled";
 
-export class Searchbar extends Component {
+export const Searchbar = ({ onSubmit }) => {
 
-    state = {
-        query: '',
+    const [query, setQuery] = useState('');
+
+    const handleChange = event => {
+        setQuery(event.target.value);
     };
 
-    handleChange = event => {
-        const query = event.target.value;
-        this.setState({ query });
-    };
-
-    handleSubmit = event => {
+    const handleSubmit = event => {
         event.preventDefault();
-        const { onSubmit } = this.props;
-        const { query } = this.state;
-        
+
+        // console.log(event.target.elements);
+        // console.log(query);
+                
         if (query.trim() === '') {
             toast.error('Please, enter something in a search query', {
-              duration: 3000,
-              style: {
-                border: '1px solid transparent',
-                padding: '16px',
-                color: 'red',
-                width: '300px',
-              },
+                duration: 3000,
+                style: {
+                    border: '1px solid transparent',
+                    padding: '16px',
+                    color: 'red',
+                    width: '300px',
+                },
             });
             return;
-          }
+        }
 
         onSubmit(query);
-        
+
+        // setQuery('');
     };
 
-    render () {
-        const { query } = this.state;
         return (
             <SearchWrap>
-                <SearchForm onSubmit={this.handleSubmit}>
+                <SearchForm onSubmit={handleSubmit}>
                     <SearchBtn type="submit" >
                         <FcSearch></FcSearch>
                     </SearchBtn>
@@ -52,14 +49,13 @@ export class Searchbar extends Component {
                     autoFocus
                     placeholder="Search images and photos"
                     name="query"
-                    onChange={this.handleChange}
+                    onChange={handleChange}
                     value={query}
                 />
                 </SearchForm>
                 <Toaster position="top-right"/>
             </SearchWrap>
         )
-    }
 }
 
 Searchbar.propTypes = {

@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { useState, useEffect } from "react";
 import { fetchImg } from "services/ApiPixabay/Api";
 import { PER_PAGE as pagelimit } from '../services/ApiPixabay/Api';
 import { Button } from "./Button/Button";
@@ -7,80 +7,89 @@ import { Searchbar } from './Searchbar/Searchbar';
 import ImageLoader from "./Loader/Loader";
 import toast, { Toaster } from 'react-hot-toast';
 
-export class App extends Component {
+export const App = () => {
   
-  state = {
-    query: '',
-    images: [],
-    page: 1,
-    isLoading: false,
-    loadMore: false,
-  }
+  const [query, setQuery] = useState('');
+  const [images, setImages] = useState([]);
+  const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadMore, setLoadMore] = useState(false);
+  const [totalImg, setTotalImg] = useState(false);
 
-  async componentDidUpdate(_, prevState) {
-      const { query, page } = this.state;
+  useEffect(() => {
+    if (!query) {
+      return;
+    }
 
-      if (prevState.page !== page || prevState.query !== query) {
-        this.setState({ isLoading: true });
-        const { hits: data, totalHits } = await fetchImg(query, page);
-        
-        if (data.length) {
-          const { page } = this.state;
+    
+    const loadImages = async () => {
+      
+      try {    
+        setIsLoading(true);    
+        const { hits, totalHits} = await fetchImg(query, page);
+        setImages(prevState => [...prevState, ...hits]);
+        setLoadMore(page <= Math.ceil(totalHits / pagelimit) ? true : false);
+        setTotalImg(totalHits);
 
-          this.setState(
-            prevState => ({
-              images: [...prevState.images, ...data],
-              loadMore: page <= Math.ceil(totalHits / pagelimit),
-            }),
-            () => {
-              window.scrollTo({
-                top: document.body.scrollHeight,
-                behavior: 'smooth',
-              });
-            }
-          );
-        } else {
-            toast.error('Nothing was found for your request', {
-                duration: 3000,
-                style: {
-                border: '1px solid transparent',
-                padding: '16px',
-                color: 'red',
-                width: '300px',
-            },
-          });
-          this.setState({isLoading: false});  
+        if (page === 1 && totalHits > 0 ) {
+          toast.success(`We finded ${totalHits} images!`)
         }
-      this.setState({isLoading: false});    
-  }
-}
+        
+      } catch (error) {
+        toast.warn(`Sorry, there are no images matching your search query! Please try again.`);
+        console.log(error);
+        
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  handleSubmitSearch = query => {
-    this.setState({ query, page:1, images:[]})
+    loadImages();
+      
+  }, [page, query]);
+
+  useEffect(() => {
+    if (totalImg === 0) {
+      toast.error('Nothing was found for your request', {
+        duration: 3000,
+        style: {
+        border: '1px solid transparent',
+        padding: '16px',
+        color: 'red',
+        width: '300px',
+    },
+  });
+    }
+  }, [totalImg]);
+
+  useEffect(() => {
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: 'smooth',
+    });
+  }, [images]); 
+        
+
+  const handleSubmitSearch = query => {
+    setQuery(query);
+    setImages([]);
+    setPage(1);
   }
 
-  handleLoadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
+  const handleLoadMore = () => {
+    setPage(prevState => prevState + 1)
   };
 
-  
-  render () {
-    const { images, loadMore, isLoading } = this.state;
-    return (
+  return (
       <>
-      <Searchbar onSubmit = {this.handleSubmitSearch} />
+      <Searchbar onSubmit = {handleSubmitSearch} />
       {images.length > 0 && (<ImageGallery images={images}/>)}
 
-      {images.length >= pagelimit && loadMore && (<Button onLoadMore = {this.handleLoadMore}/>)}
+      {images.length >= pagelimit && loadMore && (<Button onLoadMore = {handleLoadMore}/>)}
       
       {isLoading && (<ImageLoader/>)}
 
-      <Toaster position="top-center" />
+      <Toaster position="top-right" />
       </>
-    );
-  }
-  
-  
+  );
 };
